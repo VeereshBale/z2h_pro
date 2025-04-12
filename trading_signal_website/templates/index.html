@@ -1,0 +1,229 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero to Hero - Real-Time Trading Signals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    #liveChartWrapper {
+      width: 100%;
+      height: 100vh;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+    #liveChart {
+      width: 100%;
+      height: 100%;
+    }
+    .highcharts-container {
+      background-color: #0f172a !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Zero to Hero</h1>
+      <p>Master the Markets with Precision Signals—Start Winning Now!</p>
+      <span class="trust">Trusted by 10,000+ Traders</span>
+    </header>
+    <div class="signal-teaser">
+      Live Signal: <strong>EUR/USD: Buy @ 1.0850</strong> (Updated 5s ago)
+    </div>
+    <form class="selections-form" onsubmit="event.preventDefault();">
+      <div class="selections">
+        <div class="selection">
+          <label for="pair">Trading Pair</label>
+          <select id="pair" aria-label="Select trading pair">
+            <option value="EUR/USD">EUR/USD</option>
+            <option value="BTC/USD">BTC/USD</option>
+            <option value="ETH/USD">ETH/USD</option>
+          </select>
+        </div>
+        <div class="selection">
+          <label for="timeframe">Timeframe</label>
+          <select id="timeframe" aria-label="Select timeframe">
+            <option value="1m">1 Minute</option>
+            <option value="5m">5 Minutes</option>
+            <option value="1h">1 Hour</option>
+          </select>
+        </div>
+        <div class="selection">
+          <label for="strategy">Strategy</label>
+          <select id="strategy" aria-label="Select strategy">
+            <option value="ma_crossover">Moving Average Crossover</option>
+            <option value="rsi">RSI</option>
+            <option value="macd">MACD</option>
+          </select>
+        </div>
+      </div>
+      <div class="submit-btn">
+        <button type="button" id="getSignalsBtn" onclick="toggleSignals()">Get Signals</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="imageContainer" style="display: none; width: 100vw;">
+    <div id="liveChartWrapper">
+      <div id="liveChart"></div>
+    </div>
+  </div>
+
+  <script>
+    var refreshInterval = null;
+    var chart;
+
+    function drawChart(data) {
+      if (chart) chart.destroy();
+      chart = Highcharts.stockChart('liveChart', {
+        chart: {
+          backgroundColor: '#0f172a'
+        },
+        plotOptions: {
+          candlestick: {
+            pointPadding: 0,
+            groupPadding: 0,
+            lineWidth: 1,
+            pointWidth: 4
+          }
+        },
+        rangeSelector: {
+          selected: 0,
+          inputEnabled: false,
+          buttons: []
+        },
+        navigator: {
+          enabled: true
+        },
+        scrollbar: {
+          enabled: true
+        },
+        title: {
+          text: 'BTC/USDT Real-Time Signals',
+          style: { color: '#00ff99' }
+        },
+        xAxis: {
+          labels: { style: { color: '#ccc' } },
+          lineColor: '#334155',
+          tickColor: '#334155'
+        },
+        yAxis: {
+          labels: { style: { color: '#ccc' } },
+          gridLineColor: '#334155'
+        },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          style: { color: '#fff' }
+        },
+        series: [{
+          type: 'line',
+          name: 'EMA Very Fast',
+          data: data.ema_very_fast,
+          color: '#7FDBFF',
+          tooltip: { valueDecimals: 2 }
+        }, {
+          type: 'line',
+          name: 'EMA Fast',
+          data: data.ema_fast,
+          color: '#0074D9',
+          tooltip: { valueDecimals: 2 }
+        }, {
+          type: 'line',
+          name: 'EMA Slow',
+          data: data.ema_slow,
+          color: '#FFD700',
+          tooltip: { valueDecimals: 2 }
+        },{
+          type: 'line',
+          name: 'EMA Slow',
+          data: data.ema_slow,
+          color: '#FFD700',
+          tooltip: { valueDecimals: 2 }
+        },{
+          type: 'candlestick',
+          name: 'BTC/USDT',
+          data: data.ohlc,
+          color: '#ef5350',
+          upColor: '#26a69a',
+          tooltip: { valueDecimals: 2 }
+        }, {
+	  type: 'line',
+	  name: 'EMA Slow',
+	  data: data.ema_slow,
+	  color: '#FFD700',
+	  lineWidth: 1
+	}, {
+	  type: 'line',
+	  name: 'MA Slow',
+	  data: data.ma_slow,
+	  color: '#FFA500',
+	  lineWidth: 1
+	}, {
+	  type: 'line',
+	  name: 'Trend 100',
+	  data: data.trend_100,
+	  color: '#8A2BE2',
+	  lineWidth: 1
+	}, {
+	  type: 'line',
+	  name: 'Trend 150',
+	  data: data.trend_150,
+	  color: '#20B2AA',
+	  lineWidth: 1
+	}, {
+          type: 'scatter',
+          name: 'Buy',
+          data: data.buy_signals,
+          color: 'lime',
+          marker: { symbol: 'triangle', radius: 6 },
+          tooltip: { pointFormat: 'Buy: {point.y:.2f}' }
+        }, {
+          type: 'scatter',
+          name: 'Sell',
+          data: data.sell_signals,
+          color: 'red',
+          marker: { symbol: 'triangle-down', radius: 6 },
+          tooltip: { pointFormat: 'Sell: {point.y:.2f}' }
+        }]
+      });
+    }
+
+    function updateChart() {
+      fetch('/data_json?_=' + new Date().getTime())
+        .then(res => res.json())
+        .then(data => {
+          drawChart(data);
+          console.log("Chart updated", new Date().toLocaleTimeString());
+        })
+        .catch(err => console.error("Chart update failed", err));
+    }
+
+    function toggleSignals() {
+      var btn = document.getElementById("getSignalsBtn");
+      var container = document.getElementById("imageContainer");
+      if (refreshInterval === null) {
+        container.style.display = "block";
+        updateChart();
+        refreshInterval = setInterval(updateChart, 15000);
+        btn.innerText = "Stop Signals";
+      } else {
+        clearInterval(refreshInterval);
+        refreshInterval = null;
+        container.style.display = "none";
+        btn.innerText = "Get Signals";
+      }
+    }
+  </script>
+</body>
+</html>

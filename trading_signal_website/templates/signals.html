@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero to Hero - Precision Trading Signals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      /* Hide native cursor globally */
+      cursor: none !important;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #080A1C;
+      /* Force text color to white on the entire document */
+      color: #FFF;
+      font-family: 'Exo 2', sans-serif;
+      overflow-x: hidden;
+      /* Allow vertical scrolling if needed */
+      overflow-y: auto;
+      position: relative;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    /* Custom Futuristic Cursor */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00B4FF;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: all 0.1s ease;
+      box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+      animation: pulseCursor 1.5s infinite;
+    }
+
+    .cursor::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: #FF00E5;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
+
+    .cursor.hovered {
+      width: 30px;
+      height: 30px;
+      border-color: #FFD700;
+      box-shadow: 0 0 20px rgba(255,215,0,0.7);
+      animation: none;
+    }
+
+    @keyframes pulseCursor {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
+
+    /* 3D Background */
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      perspective: 1200px;
+      pointer-events: none;
+    }
+
+    .bg-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .bg-layer.wireframe {
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0 100H200M100 0V200M50 50L150 150M150 50L50 150" stroke="rgba(0,180,255,0.1)" stroke-width="1"/></svg>');
+      animation: wireframeDrift 50s infinite linear;
+      transform: translateZ(-300px) scale(1.2);
+      opacity: 0.5;
+    }
+
+    .bg-layer.particles {
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="2" fill="rgba(255,215,0,0.25)"/></svg>');
+      animation: particleOrbit 25s infinite linear;
+      transform: translateZ(-150px);
+      opacity: 0.7;
+    }
+
+    .bg-layer.glow {
+      background: radial-gradient(circle at 40% 30%, rgba(0,180,255,0.15), transparent 60%), radial-gradient(circle at 70% 70%, rgba(255,215,0,0.1), transparent 60%);
+      animation: glowPulse 20s infinite ease-in-out;
+      transform: translateZ(-50px);
+    }
+
+    @keyframes wireframeDrift {
+      0% { transform: translateZ(-300px) translate(0, 0); }
+      100% { transform: translateZ(-300px) translate(-200px, -200px); }
+    }
+
+    @keyframes particleOrbit {
+      0% { transform: translateZ(-150px) translate(0, 0); }
+      100% { transform: translateZ(-150px) translate(100px, 100px); }
+    }
+
+    @keyframes glowPulse {
+      0% { opacity: 0.1; transform: translateZ(-50px) scale(1); }
+      50% { opacity: 0.2; transform: translateZ(-50px) scale(1.1); }
+      100% { opacity: 0.1; transform: translateZ(-50px) scale(1); }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(15,20,45,0.9), rgba(10,15,35,0.9));
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 60px rgba(0,180,255,0.3), inset 0 0 20px rgba(255,215,0,0.15);
+      animation: initialize 2s ease-out;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,180,255,0.05), transparent 70%);
+      animation: rotateGlow 40s infinite linear;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+
+    @keyframes initialize {
+      0% { opacity: 0; transform: scale(0.9) translateZ(0); }
+      100% { opacity: 1; transform: scale(1) translateZ(0); }
+    }
+
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      /* Force logo text to white */
+      color: #FFF;
+      letter-spacing: 4px;
+      /* Remove text-shadow accent */
+      text-shadow: none;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+      transform: perspective(500px) translateZ(10px);
+      transition: all 0.3s;
+    }
+    .logo:hover {
+      box-shadow: 0 0 30px rgba(255,255,255,0.5);
+      transform: perspective(500px) translateZ(15px);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+      margin-top: 40px;
+    }
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.8rem;
+      /* Force header text to white */
+      color: #FFF;
+      text-shadow: none;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    .header p {
+      font-size: 1.3rem;
+      color: #FFF;
+      margin: 20px 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header .trust {
+      font-size: 1rem;
+      color: #FFF;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 25px;
+      border-radius: 30px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+      transition: all 0.3s;
+      transform: perspective(500px) translateZ(5px);
+    }
+    .header .trust:hover {
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 25px rgba(255,255,255,0.5);
+      transform: perspective(500px) translateZ(10px);
+    }
+
+    /* Signal Teaser */
+    .signal-teaser {
+      text-align: center;
+      margin: 0 auto 50px;
+      max-width: 700px;
+      font-size: 1.3rem;
+      /* Force teaser text to white */
+      color: #FFF;
+      background: linear-gradient(145deg, rgba(0,180,255,0.1), rgba(255,0,229,0.1));
+      padding: 25px;
+      border: 2px solid rgba(0,180,255,0.4);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,180,255,0.3);
+      position: relative;
+      animation: dataStream 3s infinite;
+      transform: perspective(500px) translateZ(10px);
+    }
+    .signal-teaser strong {
+      /* Force strong text to white */
+      color: #FFF;
+    }
+    .signal-teaser::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, #FFF);
+      animation: dataScan 4s infinite;
+    }
+    @keyframes dataStream {
+      0%, 100% { box-shadow: 0 0 30px rgba(0,180,255,0.3); }
+      50% { box-shadow: 0 0 40px rgba(0,180,255,0.5); }
+    }
+    @keyframes dataScan {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Selections */
+    .selections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+    .selection {
+      position: relative;
+      transform: perspective(500px) translateZ(5px);
+    }
+    .selection label {
+      font-size: 1.2rem;
+      /* Force label text to white */
+      color: #FFF;
+      margin-bottom: 12px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+    .selection select {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(145deg, #1C2540, #151A35);
+      /* Force select text to white */
+      color: #FFF;
+      border: 2px solid rgba(0,180,255,0.4);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-family: 'Exo 2', sans-serif;
+      transition: all 0.3s;
+      appearance: none;
+      /* Override the global cursor so native pointer shows in the dropdown */
+      cursor: auto !important;
+      box-shadow: inset 0 0 8px rgba(0,180,255,0.2);
+      transform: perspective(500px);
+    }
+    .selection select option {
+      background: #151A35;
+      /* Force option text to white */
+      color: #FFF;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    .selection::after {
+      content: '▼';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(30%);
+      /* Force dropdown arrow to white */
+      color: #FFF;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .selection select:hover {
+      border-color: #CCC;
+      box-shadow: 0 0 20px rgba(204,204,204,0.5), inset 0 0 12px rgba(204,204,204,0.3);
+      transform: perspective(500px) translateZ(10px);
+    }
+    .selection select:focus {
+      border-color: #AAA;
+      box-shadow: 0 0 25px rgba(170,170,170,0.5), inset 0 0 12px rgba(170,170,170,0.3);
+      outline: none;
+    }
+
+    /* Button */
+    .submit-btn {
+      text-align: center;
+    }
+    button {
+      padding: 20px 60px;
+      background: linear-gradient(45deg, #00B4FF, #FFD700);
+      /* Set button text to black for contrast */
+      color: #000 !important;
+      font-weight: 600;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.4rem;
+      font-family: 'Exo 2', sans-serif;
+      /* Use custom cursor on buttons as well */
+      cursor: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 25px rgba(0,180,255,0.6);
+      position: relative;
+      overflow: hidden;
+      transform: perspective(500px) translateZ(15px);
+      animation: quantumPulse 2.5s infinite;
+    }
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+      transition: all 0.5s;
+    }
+    button:hover::before {
+      left: 100%;
+    }
+    button:hover {
+      transform: perspective(500px) translateZ(20px) scale(1.05);
+      box-shadow: 0 0 40px rgba(0,180,255,0.8), 0 0 60px rgba(255,215,0,0.5);
+    }
+    button:active {
+      transform: perspective(500px) translateZ(10px);
+      box-shadow: 0 0 20px rgba(0,180,255,0.4);
+    }
+    @keyframes quantumPulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(0,180,255,0.6); }
+      50% { box-shadow: 0 0 35px rgba(0,180,255,0.9), 0 0 50px rgba(255,215,0,0.4); }
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 0.9rem;
+      /* Force footer text to white */
+      color: #FFF;
+    }
+    .footer a {
+      color: #FFF;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .footer a:hover {
+      color: #AAA;
+      text-shadow: 0 0 10px #AAA;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+      .container {
+        padding: 40px;
+      }
+      .logo {
+        top: 15px;
+        left: 20px;
+        font-size: 1.2rem;
+        padding: 6px 15px;
+      }
+      .header {
+        margin-top: 60px;
+      }
+      .header h1 {
+        font-size: 2.5rem;
+      }
+      .header p {
+        font-size: 1.1rem;
+      }
+      .selections {
+        grid-template-columns: 1fr;
+      }
+      button {
+        padding: 16px 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Custom Futuristic Cursor -->
+  <div class="cursor"></div>
+  <div class="bg-container">
+    <div class="bg-layer wireframe"></div>
+    <div class="bg-layer particles"></div>
+    <div class="bg-layer glow"></div>
+  </div>
+  <div class="container">
+    <div class="logo">Z2H Trading Systems</div>
+    <header class="header">
+      <h1>Zero to Hero</h1>
+      <p>Unlock Market Insights with Advanced Signal Technology</p>
+      <span class="trust">Trusted by 20,000+ Traders Worldwide</span>
+    </header>
+    <div class="signal-teaser">
+      Live Signal: <strong>EUR/USD: Buy @ 1.0850</strong> (Updated 2s ago)
+    </div>
+    <form class="selections-form">
+      <div class="selections">
+        <div class="selection">
+          <label for="pair">Trading Pair</label>
+          <select id="pair" aria-label="Select trading pair">
+            <option value="EUR/USD">EUR/USD</option>
+            <option value="BTC/USD">BTC/USD</option>
+            <option value="ETH/USD">ETH/USD</option>
+          </select>
+        </div>
+        <div class="selection">
+          <label for="timeframe">Timeframe</label>
+          <select id="timeframe" aria-label="Select timeframe">
+            <option value="1m">1 Minute</option>
+            <option value="5m">5 Minutes</option>
+            <option value="1h">1 Hour</option>
+          </select>
+        </div>
+        <div class="selection">
+          <label for="strategy">Strategy</label>
+          <select id="strategy" aria-label="Select strategy">
+            <option value="ma_crossover">Moving Average Crossover</option>
+            <option value="rsi">RSI</option>
+            <option value="macd">MACD</option>
+          </select>
+        </div>
+      </div>
+      <div class="submit-btn">
+        <button type="submit">Activate Signals</button>
+      </div>
+    </form>
+    <div class="footer">
+      <p>© 2025 Z2H Trading Systems. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | Regulated by [Authority]</p>
+    </div>
+  </div>
+
+  <script>
+    // Smooth Custom Cursor using requestAnimationFrame
+    const cursor = document.querySelector('.cursor');
+    let targetX = 0, targetY = 0;
+    window.addEventListener('mousemove', (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+    });
+    function animateCursor() {
+      let currentX = parseFloat(cursor.style.left) || targetX;
+      let currentY = parseFloat(cursor.style.top) || targetY;
+      currentX += (targetX - currentX) * 0.15;
+      currentY += (targetY - currentY) * 0.15;
+      cursor.style.left = currentX + 'px';
+      cursor.style.top = currentY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover state for interactive elements
+    window.addEventListener('mouseover', (e) => {
+      if (e.target.closest('button, select, .trust, .logo')) {
+        cursor.classList.add('hovered');
+      } else {
+        cursor.classList.remove('hovered');
+      }
+    });
+    window.addEventListener('mouseout', () => {
+      cursor.classList.remove('hovered');
+    });
+  </script>
+</body>
+</html>

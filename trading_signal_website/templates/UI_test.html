@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FUTURE - Z2H Trading Systems (Black & White)</title>
+  <!-- Google Fonts for futuristic and classic typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /****************************************
+     * Global Reset & Variables (Black & White)
+     ****************************************/
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none !important; /* Hide default cursor globally */
+    }
+    :root {
+      --bg-color: #000;                  /* Pure black background */
+      --container-bg: rgba(0, 0, 0, 0.95); /* Nearly opaque black for container */
+      --text-color: #fff;                /* White text */
+      --accent-color: #fff;              /* White for accents (borders, shadows, etc.) */
+      --secondary-accent: #ccc;          /* Light gray for secondary details */
+      --input-bg: rgba(20, 20, 20, 0.8);   /* Very dark gray for inputs */
+      --font-main: 'Exo 2', sans-serif;
+      --font-logo: 'Orbitron', sans-serif;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-main);
+      scroll-behavior: smooth;
+    }
+    
+    /****************************************
+     * Custom White Cursor
+     ****************************************/
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-color);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      transition: transform 0.1s ease, box-shadow 0.2s;
+      box-shadow: 0 0 8px var(--accent-color);
+      animation: pulseCursor 1.5s infinite;
+    }
+    .cursor::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: var(--secondary-accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
+    .cursor.hovered {
+      width: 30px;
+      height: 30px;
+      border-color: var(--secondary-accent);
+      box-shadow: 0 0 20px var(--secondary-accent);
+      animation: none;
+    }
+    @keyframes pulseCursor {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
+    
+    /****************************************
+     * Background Layers (Monochrome)
+     ****************************************/
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+    .bg-layer {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      opacity: 0.1;
+    }
+    .bg-layer.wireframe {
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><path d="M0 150H300M150 0V300" stroke="%23fff" stroke-width="1"/></svg>');
+      animation: wireframeMove 60s linear infinite;
+      transform: translate(-25%, -25%);
+    }
+    .bg-layer.particles {
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="2" fill="%23ccc"/></svg>');
+      animation: particlesMove 30s linear infinite;
+      transform: translate(-50%, -50%);
+    }
+    .bg-layer.glow {
+      background: radial-gradient(circle at center, var(--accent-color), transparent 70%);
+      animation: glowPulse 25s ease-in-out infinite;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes wireframeMove {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50%, 50%) scale(1); }
+    }
+    @keyframes particlesMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(100px, 100px); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(1.05); }
+    }
+    
+    /****************************************
+     * Main Container (Glassmorphism in Black & White)
+     ****************************************/
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--container-bg);
+      backdrop-filter: blur(8px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 60px var(--accent-color), inset 0 0 20px rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--accent-color), transparent 70%);
+      opacity: 0.05;
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+    
+    /****************************************
+     * Navigation Bar
+     ****************************************/
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 3%;
+      backdrop-filter: blur(6px);
+      z-index: 100;
+    }
+    .brand {
+      font-family: var(--font-logo);
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.05);
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .brand:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 10px var(--accent-color);
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--text-color);
+      font-size: 0.95rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--accent-color);
+      text-shadow: 0 0 5px var(--accent-color);
+    }
+    
+    /****************************************
+     * Hero Section
+     ****************************************/
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+      padding: 0 5% 0 8%;
+    }
+    .hero::before {
+      /* Background overlay for depth */
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 30%, rgba(0,0,0,0.85) 90%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 50%;
+    }
+    .hero h1 {
+      font-family: var(--font-logo);
+      font-size: 4.5rem;
+      color: var(--accent-color);
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--accent-color);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+      margin-bottom: 30px;
+      color: var(--text-color);
+    }
+    .hero button {
+      padding: 15px 40px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-main);
+      background: var(--accent-color);
+      color: var(--bg-color);
+      box-shadow: 0 0 10px var(--accent-color);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .hero button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px var(--accent-color);
+    }
+    
+    /* Placeholder for Futuristic Image */
+    .hero img {
+      position: absolute;
+      bottom: 0;
+      right: 5%;
+      max-height: 90%;
+      z-index: 1;
+      opacity: 0.9;
+    }
+    
+    /****************************************
+     * Features/Services Section
+     ****************************************/
+    .features {
+      background: #111;
+      padding: 80px 5%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .features h2 {
+      font-family: var(--font-logo);
+      font-size: 3rem;
+      margin-bottom: 50px;
+      color: var(--accent-color);
+      text-shadow: 0 0 10px var(--accent-color);
+      letter-spacing: 2px;
+    }
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .card {
+      background: #000;
+      border: 1px solid #333;
+      padding: 30px 20px;
+      border-radius: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px var(--accent-color);
+    }
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      font-family: var(--font-main);
+      color: var(--accent-color);
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+    
+    /****************************************
+     * Footer
+     ****************************************/
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: var(--bg-color);
+      font-size: 0.85rem;
+      color: #777;
+    }
+    footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover {
+      color: var(--secondary-accent);
+    }
+    
+    /****************************************
+     * Responsive Adjustments
+     ****************************************/
+    @media (max-width: 992px) {
+      .hero-content {
+        max-width: 80%;
+      }
+      .hero h1 {
+        font-size: 3rem;
+      }
+      .hero img {
+        display: none;
+      }
+    }
+    @media (max-width: 600px) {
+      nav .nav-links {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+  
+  <!-- Background Layers -->
+  <div class="bg-container">
+    <div class="bg-layer wireframe"></div>
+    <div class="bg-layer particles"></div>
+    <div class="bg-layer glow"></div>
+  </div>
+  
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="brand">Z2H Systems</div>
+    <div class="nav-links">
+      <a href="#hero">Home</a>
+      <a href="#">About</a>
+      <a href="#">Markets</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Future</h1>
+      <p>Step into tomorrow’s trading environment with cutting-edge AI-powered signals and next-gen technology. Zero to Hero Trading Systems redefines your market experience.</p>
+      <button>Learn More</button>
+    </div>
+    <!-- Placeholder for Futuristic Figure Image -->
+    <img src="C:\Users\Veeresh\hloo.jpg" alt="Futuristic Figure" />
+  </section>
+  
+  <!-- Features/Services Section -->
+  <section class="features">
+    <h2>Innovation & Technology</h2>
+    <div class="feature-cards">
+      <div class="card">
+        <h3>AI-Powered Analysis</h3>
+        <p>Utilize advanced algorithms for real-time market insights and accurate trading signals.</p>
+      </div>
+      <div class="card">
+        <h3>Quantum Speed</h3>
+        <p>Experience rapid trade execution backed by ultra-low latency systems.</p>
+      </div>
+      <div class="card">
+        <h3>Secure Infrastructure</h3>
+        <p>Our robust security measures ensure your data remains fully protected.</p>
+      </div>
+      <div class="card">
+        <h3>24/7 Support</h3>
+        <p>Get round-the-clock assistance from our dedicated support team.</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Z2H Trading Systems. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | Powered by the Future.</p>
+  </footer>
+  
+  <!-- JavaScript for Custom Cursor -->
+  <script>
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseover', (e) => {
+      // Add hovered class for interactive elements (button, links, brand)
+      if (e.target.closest('button, a, .brand') || e.target.matches('button, a, .brand')) {
+        cursor.classList.add('hovered');
+      } else {
+        cursor.classList.remove('hovered');
+      }
+    });
+    document.addEventListener('mouseout', () => {
+      cursor.classList.remove('hovered');
+    });
+  </script>
+</body>
+</html>

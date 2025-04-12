@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FUTURE - Z2H Trading Systems</title>
+  <!-- Google Fonts for futuristic & classic looks -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /****************************************
+     * Global Reset & Layout
+     ****************************************/
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none !important; /* Hide default cursor globally */
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background: #0e0e0e;
+      color: #ececec;
+      font-family: 'Exo 2', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    /****************************************
+     * Custom Cursor
+     ****************************************/
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 20px; height: 20px;
+      border: 2px solid #00bfff;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: transform 0.1s ease, box-shadow 0.2s;
+      box-shadow: 0 0 8px #00bfff;
+    }
+    .cursor::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 8px; height: 8px;
+      background: #ffcc00;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.7;
+    }
+    .cursor.hovered {
+      width: 30px; height: 30px;
+      border-color: #ffcc00;
+      box-shadow: 0 0 15px #ffcc00;
+    }
+
+    /****************************************
+     * Navigation Bar
+     ****************************************/
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 3%;
+      backdrop-filter: blur(6px);
+      z-index: 100;
+    }
+    .brand {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: #ffcc00;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(255, 204, 0, 0.1);
+      padding: 8px 15px;
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .brand:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 10px #ffcc00;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: #fff; /* White text for the nav items */
+      font-size: 0.95rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s, text-shadow 0.3s;
+      text-shadow: 0 0 8px #fff; /* Subtle glow effect */
+    }
+    .nav-links a:hover {
+      color: #ffcc00;
+      text-shadow: 0 0 15px #ffcc00;
+    }
+
+    /****************************************
+     * Hero Section
+     ****************************************/
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+      padding: 0 5% 0 8%;
+    }
+    .hero::before {
+      /* Subtle background effect for layering */
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(14,14,14,0) 30%, rgba(14,14,14,0.8) 90%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 50%;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4.5rem;
+      color: #00bfff;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px #00bfff;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      line-height: 1.5;
+      margin-bottom: 30px;
+      color: #ccc;
+    }
+    .hero button {
+      padding: 15px 40px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(45deg, #00bfff, #ffcc00);
+      color: #0e0e0e;
+      box-shadow: 0 0 10px #00bfff;
+      cursor: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .hero button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px #00bfff;
+    }
+
+    /* Robot / Futuristic Figure Image */
+    .hero img {
+      position: absolute;
+      bottom: 0;
+      right: 5%;
+      max-height: 90%;
+      z-index: 1;
+      opacity: 0.9;
+    }
+
+    /****************************************
+     * Services/Features Section
+     ****************************************/
+    .features {
+      background: #141414;
+      padding: 80px 5%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .features h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 50px;
+      color: #00bfff;
+      text-shadow: 0 0 10px #00bfff;
+      letter-spacing: 2px;
+    }
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 30px 20px;
+      border-radius: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px #00bfff;
+    }
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      font-family: 'Exo 2', sans-serif;
+      color: #ffcc00;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    /****************************************
+     * Footer
+     ****************************************/
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: #0e0e0e;
+      font-size: 0.85rem;
+      color: #777;
+    }
+    footer a {
+      color: #00bfff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover {
+      color: #ffcc00;
+    }
+
+    /****************************************
+     * Responsive Adjustments
+     ****************************************/
+    @media (max-width: 992px) {
+      .hero-content {
+        max-width: 80%;
+      }
+      .hero h1 {
+        font-size: 3rem;
+      }
+      .hero img {
+        display: none; /* Hide the big robot figure on smaller screens if needed */
+      }
+    }
+    @media (max-width: 600px) {
+      nav .nav-links {
+        gap: 12px;
+      }
+    }
+
+    /****************************************
+     * Keyframes for Parallax-ish Movement
+     ****************************************/
+    @keyframes floatRobot {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Neon Cursor -->
+  <div class="cursor"></div>
+
+  <!-- Background Container -->
+  <div class="bg-container">
+    <div class="bg-layer wireframe"></div>
+    <div class="bg-layer particles"></div>
+    <div class="bg-layer glow"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="brand">Z2H Systems</div>
+    <div class="nav-links">
+      <a href="#hero">Home</a>
+      <a href="#">About</a>
+      <a href="#">Markets</a>
+      <a href="#">Services</a>
+      <!-- New Signals tab linking to signals.html -->
+      <a href="signals.html">Signals</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Future</h1>
+      <p>Step into tomorrow’s trading environment with advanced, AI-driven signals and unparalleled technology. Zero to Hero Trading Systems transforms the way you interact with financial markets.</p>
+      <button>Learn More</button>
+    </div>
+    <!-- Big Futuristic Figure Placeholder -->
+    <img src="https://via.placeholder.com/600x800/111111/ffffff?text=Futuristic+Figure" alt="Futuristic Robot" />
+  </section>
+
+  <!-- Features/Services Section -->
+  <section class="features">
+    <h2>Innovation & Technology</h2>
+    <div class="feature-cards">
+      <div class="card">
+        <h3>AI-Powered Analysis</h3>
+        <p>Leverage cutting-edge algorithms that monitor the markets in real-time, giving you instant insights and precise signals.</p>
+      </div>
+      <div class="card">
+        <h3>Quantum Speed</h3>
+        <p>Experience lightning-fast trade execution with low-latency servers and a high-performance environment.</p>
+      </div>
+      <!-- Replacing "Secure Infrastructure" with a new feature card -->
+      <div class="card">
+        <h3>Customizable Alerts</h3>
+        <p>Get real-time notifications tailored to your trading strategy, keeping you ahead in every market move.</p>
+      </div>
+      <!-- Replacing "24/7 Support" with a new feature card -->
+      <div class="card">
+        <h3>Advanced Charting Tools</h3>
+        <p>Analyze market trends with interactive charts designed to provide clear, actionable insights.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Z2H Trading Systems. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | Powered by the Future.</p>
+  </footer>
+
+  <!-- JavaScript for Custom Cursor -->
+  <script>
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mouseover', (e) => {
+      // If hovering over interactive elements
+      if (
+        e.target.closest('button, a, .brand') ||
+        e.target.matches('button, a, .brand')
+      ) {
+        cursor.classList.add('hovered');
+      } else {
+        cursor.classList.remove('hovered');
+      }
+    });
+    document.addEventListener('mouseout', () => {
+      cursor.classList.remove('hovered');
+    });
+  </script>
+</body>
+</html>
